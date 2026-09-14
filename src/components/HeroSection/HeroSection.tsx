@@ -6,13 +6,19 @@ import { Badge } from "../lightswind/badge";
 import { HangingIdCard } from "../lightswind/HangingIdCard";
 import { AuroraTextEffect } from "../lightswind/aurora-text-effect";
 import { DotPattern } from "../lightswind/dot-pattern";
+import { PlexusBackground } from "../lightswind/PlexusBackground";
 import { SocialBrandIcon } from "../SocialBrandIcon";
+
+const profileImage = `${import.meta.env.BASE_URL}portfolio/mypic.jpeg`;
 
 export const HeroSection = () => {
   return (
     <section id="hero" className="relative min-h-[100vh] flex flex-col pt-12 md:pt-16 overflow-hidden bg-background">
       {/* Background Dot Pattern with Radial Vignette Shade */}
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
+
+      {/* Interactive Plexus Particle Network */}
+      <PlexusBackground opacity={0.4} />
       
       {/* Main Content Area */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 pb-12">
@@ -112,7 +118,7 @@ export const HeroSection = () => {
 
         {/* Right Content - Visual Hanging ID Card */}
         <motion.div 
-          className="flex-1 w-full max-w-md relative flex justify-center items-center py-2"
+          className="flex-1 w-full max-w-md relative flex justify-center items-center py-2 -mt-8"
           initial={{ opacity: 0, y: -20, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
@@ -136,7 +142,7 @@ export const HeroSection = () => {
                 {/* Profile Photo with Dual Glowing Ring */}
                 <div className="mt-1 relative w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-cyan-400 via-primary to-purple-400 backdrop-blur-md shadow-2xl border border-white/50 overflow-hidden group">
                   <img 
-                    src="/portfolio/mypic.jpeg" 
+                    src={profileImage} 
                     alt="Karthik Kathari" 
                     className="w-full h-full object-cover rounded-full filter contrast-105"
                     loading="eager"

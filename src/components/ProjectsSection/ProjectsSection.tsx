@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
+const publicAsset = (fileName: string) => `${import.meta.env.BASE_URL}portfolio/${fileName}`;
+
 export const ProjectsSection = () => {
   const [showAllProjects, setShowAllProjects] = useState(false);
 
@@ -11,7 +13,7 @@ export const ProjectsSection = () => {
       title: "Secrets App",
       subtitle: "Anonymous secret sharing platform with authentication",
       link: "https://register-login-secret-web.onrender.com/",
-      image: "/portfolio/Register_login_secrets.png",
+      image: publicAsset("Register_login_secrets.png"),
       technologies: ["Node.js", "Express", "MongoDB"],
       gridClass: "md:col-span-7 h-[420px]",
     },
@@ -20,7 +22,7 @@ export const ProjectsSection = () => {
       title: "Pokemon Explorer",
       subtitle: "Interactive Pokedex with API integration",
       link: "https://karthik-kathari.github.io/pokemon-explorer/",
-      image: "/portfolio/pokemon.png",
+      image: publicAsset("pokemon.png"),
       technologies: ["React", "REST API", "CSS3"],
       gridClass: "md:col-span-5 h-[420px]",
     },
@@ -29,7 +31,7 @@ export const ProjectsSection = () => {
       title: "Keeper Notes",
       subtitle: "Google Keep clone for simple note management",
       link: "https://keeper-app-project-react.netlify.app/",
-      image: "/portfolio/keepernotes.png",
+      image: publicAsset("keepernotes.png"),
       technologies: ["React", "JavaScript", "CSS3"],
       gridClass: "md:col-span-5 h-[360px]",
     },
@@ -38,7 +40,7 @@ export const ProjectsSection = () => {
       title: "MediaQuery Kit",
       subtitle: "CLI tool and landing site for responsive design",
       link: "https://karthik-kathari.github.io/kmk-mediaquery-kit-landing-site/",
-      image: "/portfolio/kmk-mediaquery-kit.png",
+      image: publicAsset("kmk-mediaquery-kit.png"),
       technologies: ["JavaScript", "Node.js", "CLI"],
       gridClass: "md:col-span-7 h-[360px]",
     },
@@ -47,7 +49,7 @@ export const ProjectsSection = () => {
       title: "Sporty E-Commerce",
       subtitle: "Animated sports products store with a complete shopping experience",
       link: "https://karthik-kathari.github.io/Ecommerce_Website/index.html",
-      image: "/portfolio/Ecommerce_with_Login.png",
+      image: publicAsset("Ecommerce_with_Login.png"),
       technologies: ["HTML5", "CSS3", "GSAP"],
       gridClass: "md:col-span-5 h-[360px]",
     },
@@ -56,7 +58,7 @@ export const ProjectsSection = () => {
       title: "SidCup Golf",
       subtitle: "Immersive golf centre website with scroll-driven interactions",
       link: "https://karthik-kathari.github.io/SidcupGolfCenter/",
-      image: "/portfolio/sidcupfamilygolf.png",
+      image: publicAsset("sidcupfamilygolf.png"),
       technologies: ["HTML5", "CSS3", "GSAP"],
       gridClass: "md:col-span-7 h-[360px]",
     },
@@ -65,16 +67,16 @@ export const ProjectsSection = () => {
       title: "Amazon Clone",
       subtitle: "E-commerce interface replica focused on product discovery and layout",
       link: "https://karthik-kathari.github.io/Amazon_Clone_Project/",
-      image: "/portfolio/amazon_clone_project.png",
+      image: publicAsset("amazon_clone_project.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-7 h-[360px]",
+      gridClass: "md:col-span-5 h-[360px]",
     },
     {
       id: 8,
       title: "Omnifood",
       subtitle: "Responsive healthy food delivery website with conversion-focused sections",
       link: "https://healthy-food-website-project.netlify.app/",
-      image: "/portfolio/omnifood.png",
+      image: publicAsset("omnifood.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
       gridClass: "md:col-span-5 h-[360px]",
     },
@@ -83,16 +85,16 @@ export const ProjectsSection = () => {
       title: "Your App",
       subtitle: "Multi-feature application platform with responsive navigation and UI",
       link: "https://your-apps-project.netlify.app",
-      image: "/portfolio/Yourappimg.png",
+      image: publicAsset("Yourappimg.png"),
       technologies: ["React", "Bootstrap", "JavaScript"],
-      gridClass: "md:col-span-5 h-[360px]",
+      gridClass: "md:col-span-7 h-[360px]",
     },
     {
       id: 10,
       title: "Weather Forecast",
       subtitle: "Real-time weather application powered by location and API data",
       link: "https://weather-forecast-temp.netlify.app/",
-      image: "/portfolio/weather.png",
+      image: publicAsset("weather.png"),
       technologies: ["HTML5", "CSS3", "REST API"],
       gridClass: "md:col-span-7 h-[360px]",
     },
@@ -101,25 +103,25 @@ export const ProjectsSection = () => {
       title: "Classic Calculator",
       subtitle: "Functional calculator focused on clean interaction and reliable logic",
       link: "https://karthik-kathari.github.io/Classic_Calculator/",
-      image: "/portfolio/calculator.png",
+      image: publicAsset("calculator.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-4 h-[320px]",
+      gridClass: "md:col-span-5 h-[360px]",
     },
     {
       id: 12,
       title: "Parallax Site",
       subtitle: "Visual storytelling experience with layered scrolling animation",
       link: "https://karthik-kathari.github.io/Parallax_Website/",
-      image: "/portfolio/Parallax_Website.png",
+      image: publicAsset("Parallax_Website.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-8 h-[320px]",
+      gridClass: "md:col-span-7 h-[360px]",
     },
     {
       id: 13,
       title: "News Fetcher",
       subtitle: "Live news aggregation app built around API-driven content discovery",
       link: "https://news-fetcher-app.netlify.app/",
-      image: "/portfolio/NewsfetcherImg.png",
+      image: publicAsset("NewsfetcherImg.png"),
       technologies: ["React", "REST API", "CSS3"],
       gridClass: "md:col-span-7 h-[360px]",
     },
@@ -128,7 +130,7 @@ export const ProjectsSection = () => {
       title: "Telegram Bot",
       subtitle: "Automated messaging bot for practical command-based workflows",
       link: "https://t.me/tele611bot/",
-      image: "/portfolio/TelebotSS.png",
+      image: publicAsset("TelebotSS.png"),
       technologies: ["Node.js", "Telegram API", "Automation"],
       gridClass: "md:col-span-5 h-[360px]",
     },
@@ -137,13 +139,13 @@ export const ProjectsSection = () => {
       title: "Movie Maniac",
       subtitle: "Movie discovery platform for browsing and finding new favourites",
       link: "https://moviemaniacoffical.netlify.app/",
-      image: "/portfolio/MovieFly.png",
+      image: publicAsset("MovieFly.png"),
       technologies: ["React", "REST API", "CSS3"],
       gridClass: "md:col-span-12 h-[420px]",
     },
   ];
 
-  const featuredProjectIds = [1, 15, 13, 5, 2];
+  const featuredProjectIds = [1, 2, 15, 13, 5];
   const featuredProjects = featuredProjectIds
     .map((id) => projects.find((project) => project.id === id))
     .filter((project): project is (typeof projects)[number] => Boolean(project));

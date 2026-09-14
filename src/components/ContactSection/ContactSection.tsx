@@ -35,11 +35,11 @@ export const ContactSection = () => {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    formData.append("access_key", "2da534fd-8add-49c5-8cf3-d217ea73823a");
-    formData.append("subject", "New portfolio contact message");
-    formData.append("from_name", "Karthik Kathari Portfolio");
-    formData.append("to", "karthikmk.workspace@gmail.com");
-    formData.append("h-captcha-response", captchaToken);
+    formData.set("access_key", "2da534fd-8add-49c5-8cf3-d217ea73823a");
+    formData.set("subject", "New portfolio contact message");
+    formData.set("from_name", "Karthik Kathari Portfolio");
+    formData.set("to", "karthikmk.workspace@gmail.com");
+    formData.set("h-captcha-response", captchaToken);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {

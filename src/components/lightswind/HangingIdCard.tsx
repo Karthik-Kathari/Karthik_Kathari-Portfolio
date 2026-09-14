@@ -4,10 +4,15 @@ import React, { useRef, useEffect, useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 
 // ─── Physics constants ────────────────────────────────────────────────────────
-const SPRING_K = 0;          // Real pendulum relies on gravity
-const DAMPING  = 0.92;       // Air resistance for smooth natural swing
-const GRAVITY  = 3000;       // Gravity scalar for snappy momentum
+const SPRING_K = 0;           // Real pendulum relies on gravity
+const DAMPING  = 0.92;        // Air resistance for smooth natural swing
+const GRAVITY  = 3000;        // Gravity scalar for snappy momentum
 const MASS     = 1;
+const SWAY_AMPLITUDE = 0.14;  // rad (~8°) — max swing to each side when idle
+const SWAY_FREQ      = 1.4;   // rad/s — full left→right cycle every ~4.5s
+const TRACK_STIFF    = 6;     // how strongly the pendulum chases the sway target
+const TRACK_DAMP     = 5;     // near-critical damping — smooth, no wobble/jerk
+const FREE_ENERGY_THRESHOLD = 0.045; // below this motion energy, blend back to idle sway
 
 interface CardPhysicsState {
   angle:  number;   // radians from vertical
@@ -181,11 +186,20 @@ export const HangingIdCard = ({
   const prevTimeRef  = useRef<number | null>(null);
   const prevAngleRef = useRef<number>(0);
   const isDraggingRef= useRef(false);
+  const pendulumRef  = useRef<HTMLDivElement | null>(null);
 
-  const [angle, setAngle] = useState(0);
   const [, setIsDragState] = useState(false);
+  const freeSwingRef  = useRef(false);
+  const blendRef      = useRef(0); // 0 = free physics, 1 = full sway tracking
   const dragStartX   = useRef(0);
   const dragAngle0   = useRef(0);
+
+  // Write rotation straight to the DOM — no React re-render per frame, zero lag
+  const applyAngle = useCallback((rad: number) => {
+    if (pendulumRef.current) {
+      pendulumRef.current.style.transform = `rotate(${rad * (180 / Math.PI)}deg)`;
+    }
+  }, []);
 
   // ── Physics loop ────────────────────────────────────────────────────────────
   const tick = useCallback((now: number) => {
@@ -195,25 +209,46 @@ export const HangingIdCard = ({
 
     const s = physRef.current;
     if (!isDraggingRef.current) {
-      // Realistic pendulum: L is approximate center of mass
-      const L = ropeLength + 100; 
-      const torque =
-        -(GRAVITY / L)    * Math.sin(s.angle) -
-        (DAMPING  / MASS) * s.vel             -
-        (SPRING_K / MASS) * s.angle;
+      // After a drag/click the card swings freely (real pendulum physics) until the
+      // motion decays, then blends smoothly back into the perpetual idle sway.
+      if (freeSwingRef.current) {
+        const L = ropeLength + 100;
+        const torque =
+          -(GRAVITY / L)    * Math.sin(s.angle) -
+          (DAMPING  / MASS) * s.vel             -
+          (SPRING_K / MASS) * s.angle;
 
-      s.vel   += torque * dt;
-      s.angle += s.vel  * dt;
+        s.vel   += torque * dt;
+        s.angle += s.vel  * dt;
 
-      setAngle(s.angle);
-
-      if (Math.abs(s.angle) > 0.001 || Math.abs(s.vel) > 0.001) {
-        rafRef.current = requestAnimationFrame(tick);
+        // Once the swing has nearly settled, hand control back to the idle sway
+        const energy = 0.5 * s.vel * s.vel + (GRAVITY / L) * (1 - Math.cos(s.angle));
+        if (energy < FREE_ENERGY_THRESHOLD && Math.abs(s.vel) < 0.15) {
+          freeSwingRef.current = false;
+          blendRef.current = 0;
+        }
       } else {
-        // settled perfectly at bottom
-        s.angle = 0; s.vel = 0;
-        setAngle(0);
+        // Continuous left↔right idle sway: track a smooth sine target with a
+        // critically-damped spring — smooth, symmetric, endless.
+        blendRef.current = Math.min(1, blendRef.current + dt * 1.5); // gentle ease-in
+        const blend = blendRef.current;
+        const t = now / 1000;
+        const target = SWAY_AMPLITUDE * Math.sin(t * SWAY_FREQ);
+        const trackAccel =
+          TRACK_STIFF * (target - s.angle) -
+          TRACK_DAMP  * s.vel;
+        const gravityAccel =
+          -(GRAVITY / (ropeLength + 100)) * Math.sin(s.angle) -
+          (DAMPING  / MASS) * s.vel;
+
+        const accel = gravityAccel * (1 - blend) + trackAccel * blend;
+        s.vel   += accel * dt;
+        s.angle += s.vel  * dt;
       }
+
+      applyAngle(s.angle);
+
+      rafRef.current = requestAnimationFrame(tick);
     } else {
       // Track velocity while dragging so we can "flick" it
       if (dt > 0) {
@@ -250,26 +285,36 @@ export const HangingIdCard = ({
     const newAngle = dragAngle0.current - dx / L;
     const clamped  = Math.max(-1.4, Math.min(1.4, newAngle));
     physRef.current.angle = clamped;
-    setAngle(clamped);
-  }, [ropeLength]);
+    applyAngle(clamped);
+  }, [ropeLength, applyAngle]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     e.currentTarget.releasePointerCapture(e.pointerId);
     isDraggingRef.current = false;
     setIsDragState(false);
+    // Release into natural free swing — real pendulum momentum, like before
+    freeSwingRef.current = true;
+    blendRef.current = 0;
   }, []);
 
   // ── Click impulse (tap) ─────────────────────────────────────────────────────
   const onCardClick = useCallback(() => {
-    if (Math.abs(physRef.current.vel) < 0.1 && Math.abs(physRef.current.angle) < 0.05) {
-      physRef.current.vel = 4.0; // Give it a satisfying push
-      startPhysics();
-    }
+    // Give it a satisfying push that swings naturally, then decays back to idle sway
+    physRef.current.vel += 3.0;
+    freeSwingRef.current = true;
+    blendRef.current = 0;
+    startPhysics();
   }, [startPhysics]);
 
   useEffect(() => () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); }, []);
 
-  const cardRotateDeg = angle * (180 / Math.PI);
+  // Start the perpetual left↔right sway immediately on page load
+  useEffect(() => {
+    prevTimeRef.current = null;
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -283,15 +328,16 @@ export const HangingIdCard = ({
 
       {/* The Pendulum Assembly (Rope + Lock Clip + Card) */}
       <div 
+        ref={pendulumRef}
         className="flex flex-col items-center cursor-grab active:cursor-grabbing"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onClick={onCardClick}
         style={{
-          transform: `rotate(${cardRotateDeg}deg)`,
           transformOrigin: "top center",
           willChange: "transform",
+          backfaceVisibility: "hidden",
           marginTop: "-6px"
         }}
       >
