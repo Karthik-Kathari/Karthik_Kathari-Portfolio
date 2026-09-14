@@ -1,10 +1,14 @@
 import { motion } from "framer-motion";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Send, MapPin, Mail, Phone, X } from "lucide-react";
+import { CheckCircle2, Handshake, Send, MapPin, Mail, Phone, X } from "lucide-react";
 import { Input } from "../lightswind/input";
 import { Textarea } from "../lightswind/textarea";
 import { Button } from "../lightswind/button";
+
+// Separate Web3Forms access key with "Captcha required" DISABLED in the dashboard.
+// Create it at https://web3forms.com (same email) and paste it here.
+const HIRING_ACCESS_KEY = "2da534fd-8add-49c5-8cf3-d217ea73823a";
 
 export const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -12,7 +16,24 @@ export const ContactSection = () => {
   const [formError, setFormError] = useState("Something went wrong. Please try again or email me directly.");
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const [hiringMode, setHiringMode] = useState(false);
+  const [sentViaFallback, setSentViaFallback] = useState(false);
   const captchaRef = useRef<HCaptcha>(null);
+
+  // "Hire Me" button puts the form into hiring mode: tailored copy, prefilled
+  // template, priority subject — and NO captcha, so HR can reach out friction-free.
+  useEffect(() => {
+    const handler = () => {
+      setHiringMode(true);
+      const msg = document.querySelector<HTMLTextAreaElement>('form textarea[name="message"]');
+      if (msg && !msg.value.trim()) {
+        msg.value = "Hi Karthik,\n\nWe found your portfolio and would like to discuss an opportunity:\n\nRole / Position: \nCompany: \nEmployment type (Full-time / Contract / Freelance): \nLocation / Remote: \n\nBest regards,";
+        msg.focus();
+      }
+    };
+    window.addEventListener("portfolio:hiring", handler);
+    return () => window.removeEventListener("portfolio:hiring", handler);
+  }, []);
 
   useEffect(() => {
     if (!showSuccessToast) return;
@@ -26,7 +47,8 @@ export const ContactSection = () => {
     setFormStatus("idle");
     setFormError("Something went wrong. Please try again or email me directly.");
 
-    if (!captchaToken) {
+    // Hiring inquiries skip the captcha (friction-free for HR); botcheck honeypot instead
+    if (!hiringMode && !captchaToken) {
       setFormStatus("error");
       setFormError("Please complete the captcha before sending your message.");
       setIsSubmitting(false);
@@ -35,11 +57,30 @@ export const ContactSection = () => {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    formData.set("access_key", "2da534fd-8add-49c5-8cf3-d217ea73823a");
-    formData.set("subject", "New portfolio contact message");
+    formData.set("access_key", hiringMode ? HIRING_ACCESS_KEY : "2da534fd-8add-49c5-8cf3-d217ea73823a");
+    formData.set(
+      "subject",
+      hiringMode ? "🎯 HIRING INQUIRY — Portfolio" : "New portfolio contact message"
+    );
     formData.set("from_name", "Karthik Kathari Portfolio");
     formData.set("to", "karthikmk.workspace@gmail.com");
-    formData.set("h-captcha-response", captchaToken);
+    if (!hiringMode) {
+      formData.set("h-captcha-response", captchaToken);
+    }
+
+    // Fallback: if the API fails (e.g. key still has captcha enforced), copy the
+    // inquiry to the clipboard AND open the user's mail client pre-filled.
+    const mailtoFallback = () => {
+      const name = formData.get("name") || "";
+      const email = formData.get("email") || "";
+      const message = formData.get("message") || "";
+      const subject = hiringMode ? "🎯 HIRING INQUIRY — Portfolio" : "New portfolio contact message";
+      const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(`To: karthikmk.workspace@gmail.com\nSubject: ${subject}\n\n${body}`).catch(() => {});
+      }
+      window.location.href = `mailto:karthikmk.workspace@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -51,15 +92,35 @@ export const ContactSection = () => {
       const result = await response.json() as { success?: boolean; message?: string };
 
       if (!response.ok || result.success !== true) {
+        if (hiringMode) {
+          form.reset();
+          setSentViaFallback(true);
+          mailtoFallback();
+          setFormStatus("success");
+          setShowSuccessToast(true);
+          setFormError("");
+          return;
+        }
         throw new Error(result.message || "Web3Forms could not send this message.");
       }
 
       form.reset();
-      captchaRef.current?.resetCaptcha();
-      setCaptchaToken("");
+      if (!hiringMode) {
+        captchaRef.current?.resetCaptcha();
+        setCaptchaToken("");
+      }
       setFormStatus("success");
       setShowSuccessToast(true);
     } catch (error) {
+      if (hiringMode) {
+        form.reset();
+        setSentViaFallback(true);
+        mailtoFallback();
+        setFormStatus("success");
+        setShowSuccessToast(true);
+        setFormError("");
+        return;
+      }
       setFormError(error instanceof Error ? error.message : "Something went wrong. Please try again or email me directly.");
       setFormStatus("error");
     } finally {
@@ -98,8 +159,14 @@ export const ContactSection = () => {
                 <CheckCircle2 className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-bold text-foreground">Message sent successfully</p>
-                <p className="mt-1 text-sm text-muted-foreground">Thanks for reaching out. I&apos;ll get back to you soon.</p>
+                <p className="font-bold text-foreground">
+                  {sentViaFallback ? "Almost there — press Send in your email app" : "Message sent successfully"}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {sentViaFallback
+                    ? "Your email app opened with the message ready (also copied to clipboard). Just hit send and it's on its way."
+                    : "Thanks for reaching out. I'll get back to you soon."}
+                </p>
               </div>
             </div>
             <div className="mt-3 h-1 overflow-hidden rounded-full bg-emerald-500/10">
@@ -127,11 +194,20 @@ export const ContactSection = () => {
           <div className="flex-1 space-y-8">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                Let's <span className="text-gradient-primary">Connect</span>
+                {hiringMode ? (
+                  <>
+                    Let&apos;s <span className="text-gradient-primary">Work Together</span>
+                  </>
+                ) : (
+                  <>
+                    Let&apos;s <span className="text-gradient-primary">Connect</span>
+                  </>
+                )}
               </h2>
               <p className="text-muted-foreground">
-                Currently open for new opportunities and exciting collaborations. 
-                Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                {hiringMode
+                  ? "Great! Share the role details below — no captcha needed, and your message is flagged as a hiring inquiry so it gets answered first."
+                  : "Currently open for new opportunities and exciting collaborations. Whether you have a question or just want to say hi, I'll try my best to get back to you!"}
               </p>
             </div>
 
@@ -159,6 +235,11 @@ export const ContactSection = () => {
 
           {/* Form */}
           <div className="flex-1 glass-panel p-8 rounded-[2rem] border border-foreground/10 relative">
+            {hiringMode && (
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-4 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <Handshake className="w-4 h-4" /> Hiring inquiry — priority response
+              </div>
+            )}
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-medium text-muted-foreground mb-1.5">Your Name</label>
@@ -193,6 +274,8 @@ export const ContactSection = () => {
                 />
               </div>
 
+              {/* No captcha in hiring mode — HR gets a friction-free form */}
+              {!hiringMode && (
               <div className="overflow-hidden rounded-xl border border-foreground/10 bg-foreground/[0.03] p-3">
                 <HCaptcha
                   ref={captchaRef}
@@ -210,9 +293,13 @@ export const ContactSection = () => {
                   }}
                 />
               </div>
+              )}
 
-              <Button type="submit" size="lg" disabled={isSubmitting} className="w-full rounded-xl bg-primary text-primary-foreground font-bold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] mt-4 h-12 disabled:cursor-not-allowed disabled:opacity-60">
-                {isSubmitting ? "Sending..." : "Send Message"} <Send className="w-4 h-4 ml-1" />
+              {/* Honeypot — invisible to humans, catches bots when captcha is skipped */}
+              <input type="checkbox" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
+
+              <Button type="submit" size="lg" disabled={isSubmitting} className={hiringMode ? "w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold shadow-[0_0_20px_rgba(16,185,129,0.35)] hover:shadow-[0_0_30px_rgba(16,185,129,0.55)] mt-4 h-12 disabled:cursor-not-allowed disabled:opacity-60" : "w-full rounded-xl bg-primary text-primary-foreground font-bold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] mt-4 h-12 disabled:cursor-not-allowed disabled:opacity-60"}>
+                {isSubmitting ? "Sending..." : hiringMode ? "Send Hiring Inquiry" : "Send Message"} <Send className="w-4 h-4 ml-1" />
               </Button>
 
               {formStatus === "error" && (

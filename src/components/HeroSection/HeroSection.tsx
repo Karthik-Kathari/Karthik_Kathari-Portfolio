@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Briefcase, Download } from "lucide-react";
 import TechStackSection from "../TechStackSection/TechStackSection";
 import { Button } from "../lightswind/button";
 import { Badge } from "../lightswind/badge";
@@ -13,7 +13,7 @@ const profileImage = `${import.meta.env.BASE_URL}portfolio/mypic.jpeg`;
 
 export const HeroSection = () => {
   return (
-    <section id="hero" className="relative min-h-[100vh] flex flex-col pt-12 md:pt-16 overflow-hidden bg-background">
+    <section id="hero" className="relative min-h-[100vh] flex flex-col pt-4 md:pt-8 overflow-hidden bg-background">
       {/* Background Dot Pattern with Radial Vignette Shade */}
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
 
@@ -25,7 +25,7 @@ export const HeroSection = () => {
         
         {/* Left Content */}
         <motion.div 
-          className="flex-1 flex flex-col items-center md:items-start text-center md:text-left pt-0"
+          className="flex-1 flex flex-col items-center md:items-start text-center md:text-left pt-0 -mt-2 md:-mt-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -34,7 +34,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-6"
+            className="mb-5"
           >
             <Badge variant="outline" size="lg" className="gap-2.5 py-1.5 px-4 glass-panel border-foreground/10">
               <span className="relative flex h-2 w-2">
@@ -51,13 +51,13 @@ export const HeroSection = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="mb-4 text-center md:text-left"
           >
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-2">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-1">
               Hi, I'm
             </h1>
             
             {/* Light Theme: Clean Vibrant Gradient Text */}
             <div className="block dark:hidden">
-              <span className="bg-gradient-to-r from-violet-600 via-sky-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent font-extrabold text-[clamp(3rem,6.5vw,5.5rem)] leading-none tracking-tight block pb-2 select-none">
+              <span className="bg-gradient-to-r from-violet-600 via-sky-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent font-extrabold text-[clamp(2.4rem,5.2vw,4.4rem)] leading-none tracking-tight block pb-1 select-none">
                 Karthik Kathari
               </span>
             </div>
@@ -66,7 +66,7 @@ export const HeroSection = () => {
             <div className="hidden dark:block">
               <AuroraTextEffect
                 text="Karthik Kathari"
-                fontSize="clamp(3rem, 6.5vw, 5.5rem)"
+                fontSize="clamp(2.4rem, 5.2vw, 4.4rem)"
                 className="bg-transparent overflow-visible p-0 justify-start"
                 textClassName="bg-gradient-to-r from-cyan-400 via-purple-400 to-sky-300 bg-clip-text text-transparent pb-2 font-extrabold"
               />
@@ -74,20 +74,30 @@ export const HeroSection = () => {
           </motion.div>
 
           <motion.p 
-            className="text-lg md:text-xl text-muted-foreground max-w-xl mb-8 leading-relaxed w-full"
+            className="text-base md:text-lg text-muted-foreground max-w-xl mb-5 leading-relaxed w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            Full Stack Developer building practical, scalable, and user-focused web applications across frontend, backend, APIs, databases, and cloud infrastructure.
+            Full Stack Developer open to full-time roles, freelance projects, and collaborations — I build practical, scalable web applications across frontend, backend, APIs, and cloud infrastructure, and I ship fast.
           </motion.p>
 
           <motion.div 
-            className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-10 w-full md:w-auto"
+            className="flex flex-wrap items-center justify-center md:justify-start gap-3.5 mb-6 w-full md:w-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
+            <Button
+              size="lg"
+              onClick={() => {
+                window.dispatchEvent(new Event("portfolio:hiring"));
+                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="rounded-full px-7 h-12 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold flex items-center gap-2 transition-all shadow-[0_0_24px_rgba(16,185,129,0.4)] hover:shadow-[0_0_36px_rgba(16,185,129,0.6)] hover:-translate-y-1 hover:scale-[1.03] animate-pulse-glow"
+            >
+              <Briefcase className="w-4 h-4" /> Hire Me
+            </Button>
             <Button size="lg" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="rounded-full px-7 h-12 bg-primary text-primary-foreground font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] hover:-translate-y-1">
               View Work <ArrowRight className="w-4 h-4" />
             </Button>
