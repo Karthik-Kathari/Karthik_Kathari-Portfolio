@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Atom,
   Server,
@@ -12,6 +12,37 @@ import {
   Users,
   Rocket,
 } from "lucide-react";
+
+function SkillPanel({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const pointerX = useMotionValue(0.5);
+  const pointerY = useMotionValue(0.5);
+  const rotateX = useSpring(useTransform(pointerY, [0, 1], [4, -4]), { stiffness: 180, damping: 22 });
+  const rotateY = useSpring(useTransform(pointerX, [0, 1], [-4, 4]), { stiffness: 180, damping: 22 });
+  const glowX = useTransform(pointerX, (value) => `${value * 100}%`);
+  const glowY = useTransform(pointerY, (value) => `${value * 100}%`);
+  const glow = useMotionTemplate`radial-gradient(circle at ${glowX} ${glowY}, rgba(139, 92, 246, 0.14), transparent 42%)`;
+
+  return (
+    <motion.div
+      onPointerMove={(event) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        pointerX.set((event.clientX - bounds.left) / bounds.width);
+        pointerY.set((event.clientY - bounds.top) / bounds.height);
+      }}
+      onPointerLeave={() => {
+        pointerX.set(0.5);
+        pointerY.set(0.5);
+      }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 1100 }}
+      className={`group relative overflow-hidden glass-panel rounded-[2rem] border border-foreground/15 shadow-xl transition-shadow duration-300 hover:shadow-[0_24px_60px_rgba(0,0,0,0.18)] ${className}`}
+    >
+      <motion.div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: glow }} />
+      <div className="relative z-10" style={{ transform: "translateZ(16px)" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function ProfessionalProfile() {
   const technicalSkills = [
@@ -41,16 +72,20 @@ export default function ProfessionalProfile() {
       }}
       viewport={{ once: true, amount: 0.2 }}
     >
-      <div className="flex items-center gap-3 mb-2">
+      <div className="relative mb-2 flex items-center gap-3 overflow-hidden py-2">
+        <span aria-hidden="true" className="pointer-events-none absolute -left-1 top-1/2 -translate-y-1/2 text-[clamp(4rem,13vw,10rem)] font-black leading-none tracking-[-0.08em] text-foreground/[0.035]">
+          SKILLS
+        </span>
         <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
           <Code2 className="w-5 h-5" />
         </div>
-        <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">Expertise & Skills</h3>
+        <h3 className="relative z-10 text-2xl md:text-3xl font-extrabold tracking-tight">Expertise & Skills</h3>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Technical Skills */}
-        <div className="glass-panel p-8 rounded-[2rem] border border-foreground/15 shadow-xl relative overflow-hidden">
+        <SkillPanel>
+          <div className="p-8">
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/60">
             <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
               <Server className="w-5 h-5 text-primary" /> Technical Arsenal
@@ -91,10 +126,12 @@ export default function ProfessionalProfile() {
               );
             })}
           </div>
-        </div>
+          </div>
+        </SkillPanel>
 
         {/* Soft Skills & Traits */}
-        <div className="glass-panel p-8 rounded-[2rem] border border-foreground/15 shadow-xl flex flex-col justify-between">
+        <SkillPanel className="flex flex-col justify-between">
+          <div className="p-8 flex h-full flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/60">
               <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -116,7 +153,8 @@ export default function ProfessionalProfile() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       transition={{ type: "spring", stiffness: 200, damping: 15, delay: i * 0.08 }}
                       viewport={{ once: true }}
-                      className={`px-4 py-2.5 rounded-2xl border text-sm font-semibold flex items-center gap-2 shadow-sm hover:scale-105 transition-transform cursor-default ${skill.color}`}
+                      whileHover={{ y: -8, scale: 1.1, zIndex: 20 }}
+                      className={`relative px-4 py-2.5 rounded-2xl border text-sm font-semibold flex items-center gap-2 shadow-sm hover:border-[#f1f5f9] hover:shadow-[0_14px_28px_rgba(0,0,0,0.3),0_0_18px_rgba(192,192,192,0.22)] transition-colors cursor-default ${skill.color}`}
                     >
                       <Icon className="w-4 h-4" />
                       <span>{skill.name}</span>
@@ -142,7 +180,8 @@ export default function ProfessionalProfile() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </SkillPanel>
       </div>
     </motion.section>
   );

@@ -69,6 +69,46 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
+.credentials-card:hover {
+  border-color: #c0c0c0 !important;
+  box-shadow: 0 0 0 1px #c0c0c0, 0 8px 24px rgba(192, 192, 192, 0.12) !important;
+}
+
+.education-card {
+  border: 1px solid #c9a227 !important;
+  transition: border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+.education-card:hover {
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 0 1px #ffd700, 0 16px 40px rgba(255, 215, 0, 0.2) !important;
+}
+
+@keyframes contact-confetti-fall {
+  0% { opacity: 1; transform: translate3d(0, -10px, 0) rotate(0deg); }
+  100% { opacity: 0; transform: translate3d(0, 82vh, 0) rotate(620deg); }
+}
+
+@keyframes toast-progress-shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+.contact-confetti {
+  animation-name: contact-confetti-fall;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.35, 1);
+  animation-fill-mode: forwards;
+}
+
+.toast-progress {
+  animation: toast-progress-shrink 5.5s linear forwards;
+}
+
+.achievement-card:hover {
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 0 1px #ffd700, 0 12px 30px rgba(255, 215, 0, 0.16) !important;
+}
+
 .text-gradient {
   background: linear-gradient(135deg, var(--fg) 0%, var(--muted-fg) 100%);
   -webkit-background-clip: text;

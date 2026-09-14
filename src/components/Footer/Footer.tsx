@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowUp, Heart } from "lucide-react";
+import { ArrowUp, Heart } from "lucide-react";
 import { MorphingText } from "../lightswind/morphing-text";
+import { SocialBrandIcon } from "../SocialBrandIcon";
 
 export const Footer = () => {
   const morphingTexts = [
@@ -25,9 +26,9 @@ export const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com/Karthik-Kathari/", label: "GitHub" },
-    { icon: Linkedin, href: "https://www.linkedin.com/in/karthik-kathari-434495154/", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:karthikmk.workspace@gmail.com", label: "Email" },
+    { brand: "github" as const, href: "https://github.com/Karthik-Kathari/", label: "GitHub" },
+    { brand: "linkedin" as const, href: "https://www.linkedin.com/in/karthik-kathari-434495154/", label: "LinkedIn" },
+    { brand: "gmail" as const, href: "mailto:karthikmk.workspace@gmail.com", label: "Email" },
   ];
 
   return (
@@ -98,9 +99,13 @@ export const Footer = () => {
         {/* Bottom Row: Social Icons & Copyright */}
         <div className="pt-6 border-t border-black/5 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-muted-foreground">
           {/* Social Icons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" data-hide-cursor="true">
             {socialLinks.map((social, i) => {
-              const Icon = social.icon;
+              const hoverClass = social.label === "GitHub"
+                ? "hover:text-[#181717] dark:hover:text-white"
+                : social.label === "LinkedIn"
+                  ? "hover:text-[#0a66c2]"
+                  : "hover:text-[#ea4335]";
               return (
                 <a
                   key={i}
@@ -109,9 +114,10 @@ export const Footer = () => {
                   target={social.href.startsWith("http") ? "_blank" : undefined}
                   rel="noreferrer"
                   data-no-magnetic="true"
-                  className="group w-10 h-10 rounded-full glass-panel border border-black/5 dark:border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/60 hover:bg-primary/10 hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  data-hide-cursor="true"
+                  className={`group w-10 h-10 rounded-full glass-panel border border-black/5 dark:border-white/10 flex items-center justify-center text-muted-foreground ${hoverClass} hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
                 >
-                  <Icon className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+                  <SocialBrandIcon brand={social.brand} className="w-8 h-8 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
                 </a>
               );
             })}

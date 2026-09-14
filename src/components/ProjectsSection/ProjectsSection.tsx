@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 export const ProjectsSection = () => {
+  const [showAllProjects, setShowAllProjects] = useState(false);
+
   const projects = [
     {
       id: 1,
@@ -140,6 +143,13 @@ export const ProjectsSection = () => {
     },
   ];
 
+  const featuredProjectIds = [1, 15, 13, 5, 2];
+  const featuredProjects = featuredProjectIds
+    .map((id) => projects.find((project) => project.id === id))
+    .filter((project): project is (typeof projects)[number] => Boolean(project));
+  const remainingProjects = projects.filter((project) => !featuredProjectIds.includes(project.id));
+  const visibleProjects = showAllProjects ? [...featuredProjects, ...remainingProjects] : featuredProjects;
+
   return (
     <section id="projects" className="w-full max-w-7xl mx-auto px-6 py-24">
       <motion.div
@@ -151,7 +161,7 @@ export const ProjectsSection = () => {
       >
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
           <div>
-            <p className="text-primary text-xs font-bold uppercase tracking-[0.25em] mb-3">15 projects · selected work</p>
+            <p className="text-primary text-xs font-bold uppercase tracking-[0.25em] mb-3">{projects.length} projects · selected work</p>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-center md:text-left">
               Built with <span className="text-gradient-primary">purpose</span>
             </h2>
@@ -164,7 +174,7 @@ export const ProjectsSection = () => {
 
       {/* 12-Column Full-Width Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
-        {projects.map((project, i) => (
+        {visibleProjects.map((project, i) => (
           <motion.a
             key={project.id}
             href={project.link}
@@ -217,6 +227,21 @@ export const ProjectsSection = () => {
           </motion.a>
         ))}
       </div>
+
+      {!showAllProjects && (
+        <div className="mt-10 flex justify-center">
+          <motion.button
+            type="button"
+            onClick={() => setShowAllProjects(true)}
+            whileHover={{ y: -3, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-full border border-foreground/15 bg-foreground/[0.04] px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            View more projects
+            <span className="ml-2 text-xs text-muted-foreground">+{remainingProjects.length}</span>
+          </motion.button>
+        </div>
+      )}
     </section>
   );
 };
