@@ -114,7 +114,7 @@ export const HeroSection = () => {
 
         {/* Right Content - Visual Hanging ID Card */}
         <motion.div 
-          className="flex-1 w-full max-w-md relative flex justify-center items-center py-2"
+          className="flex-1 w-full max-w-md relative flex justify-center items-center py-2 -mt-8"
           initial={{ opacity: 0, y: -20, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}

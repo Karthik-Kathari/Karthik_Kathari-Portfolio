@@ -127,7 +127,6 @@ export const Footer = () => {
           <div className="flex items-center gap-1.5 font-medium text-center md:text-right">
             <span>© {new Date().getFullYear()} Karthik Kathari. Crafted with</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline-block" />
-            <span>& Lightswind UI</span>
           </div>
         </div>
 
