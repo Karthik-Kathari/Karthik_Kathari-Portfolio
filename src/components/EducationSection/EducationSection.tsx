@@ -1,7 +1,6 @@
 import SkillCategory from "./SkillCategory";
 import { motion } from "framer-motion";
 import { GraduationCap, BookOpen, Award, CheckCircle2, Calendar, Building2, Sparkles } from "lucide-react";
-import { MagicCard } from "../lightswind/magic-card";
 
 export const EducationSection = () => {
   const education = [
@@ -74,13 +73,7 @@ export const EducationSection = () => {
                 transition={{ delay: i * 0.15, duration: 0.5 }}
                 viewport={{ once: true }}
               >
-                <MagicCard
-                  className="h-full p-8 rounded-[2.25rem] border border-border/80 bg-card/80 shadow-xl"
-                  gradientSize={300}
-                  gradientColor="rgba(139, 92, 246, 0.12)"
-                  gradientFrom="#8b5cf6"
-                  gradientTo="#38bdf8"
-                >
+                <div className="education-card group h-full rounded-[2.25rem] bg-card/90 p-8 shadow-xl transition-all duration-300 hover:-translate-y-1.5">
                   <div className="flex flex-col h-full justify-between gap-6">
                     <div>
                       {/* Header with Icon and Distinction Badge */}
@@ -120,7 +113,7 @@ export const EducationSection = () => {
                       </ul>
                     </div>
                   </div>
-                </MagicCard>
+                </div>
               </motion.div>
             );
           })}

@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Download, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import TechStackSection from "../TechStackSection/TechStackSection";
 import { Button } from "../lightswind/button";
 import { Badge } from "../lightswind/badge";
 import { HangingIdCard } from "../lightswind/HangingIdCard";
 import { AuroraTextEffect } from "../lightswind/aurora-text-effect";
 import { DotPattern } from "../lightswind/dot-pattern";
+import { SocialBrandIcon } from "../SocialBrandIcon";
 
 export const HeroSection = () => {
   return (
@@ -92,17 +93,18 @@ export const HeroSection = () => {
           {/* Social Links */}
           <motion.div 
             className="flex items-center gap-5 justify-center md:justify-start w-full md:w-auto"
+            data-hide-cursor="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
           >
             {[
-              { Icon: Github, href: "https://github.com/Karthik-Kathari/", label: "GitHub" },
-              { Icon: Linkedin, href: "https://www.linkedin.com/in/karthik-kathari-434495154/", label: "LinkedIn" },
-              { Icon: Mail, href: "mailto:karthikmk.workspace@gmail.com", label: "Email" },
-            ].map(({ Icon, href, label }) => (
-              <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={label} data-no-magnetic="true" className="group flex h-11 w-11 items-center justify-center rounded-full border border-foreground/10 bg-foreground/[0.03] text-muted-foreground transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:border-primary/60 hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_22px_rgba(139,92,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+              { brand: "github" as const, href: "https://github.com/Karthik-Kathari/", label: "GitHub", hoverClass: "hover:text-[#181717] dark:hover:text-white" },
+              { brand: "linkedin" as const, href: "https://www.linkedin.com/in/karthik-kathari-434495154/", label: "LinkedIn", hoverClass: "hover:text-[#0a66c2]" },
+              { brand: "gmail" as const, href: "mailto:karthikmk.workspace@gmail.com", label: "Email", hoverClass: "hover:text-[#ea4335]" },
+            ].map(({ brand, href, label, hoverClass }) => (
+              <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" aria-label={label} data-no-magnetic="true" data-hide-cursor="true" className={`group flex h-11 w-11 items-center justify-center rounded-full border border-foreground/10 bg-foreground/[0.03] text-muted-foreground transition-all duration-300 hover:-translate-y-1 hover:scale-110 ${hoverClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}>
+                <SocialBrandIcon brand={brand} className="w-9 h-9 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
               </a>
             ))}
           </motion.div>
@@ -117,10 +119,11 @@ export const HeroSection = () => {
         >
           <HangingIdCard
             name="Karthik Kathari"
-            role="Full Stack Developer"
+            role="Full St
+            ack Developer"
             badgeId="KK-2026-PRO"
             accentColor="#8b5cf6"
-            ropeLength={75}
+            ropeLength={40}
             ropeColor="#27272a"
             cardWidth="w-72 sm:w-80 md:w-84"
           >

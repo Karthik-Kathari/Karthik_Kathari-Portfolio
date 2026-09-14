@@ -55,9 +55,9 @@ export interface SmoothCursorProps {
 export function SmoothCursor({
   cursor,
   springConfig = {
-    damping: 35,
-    stiffness: 350,
-    mass: 0.8,
+    damping: 40,
+    stiffness: 220,
+    mass: 0.9,
     restDelta: 0.001,
   },
   className,
@@ -145,14 +145,22 @@ export function SmoothCursor({
       let currentPos = { x: e.clientX, y: e.clientY };
 
       // Detect if hovering over clickable/pointer element
-      const target = e.target as HTMLElement | null;
+      const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+      const hideCursor = Boolean(
+        target?.closest(
+          "[data-hide-cursor='true'], a, button, [role='button'], input, textarea, select, .cursor-pointer, [data-magnetic]"
+        )
+      );
       const interactiveTarget = target?.closest(magneticElements);
       const isInteractive = Boolean(interactiveTarget);
 
+      setIsVisible(!hideCursor);
       setIsHoveringInteractive(isInteractive);
       scale.set(isInteractive ? 1.2 : 1);
 
-      if (isInteractive) {
+      if (hideCursor) {
+        document.body.style.cursor = "pointer";
+      } else if (isInteractive) {
         document.body.style.cursor = "pointer";
       } else {
         document.body.style.cursor = "none";
