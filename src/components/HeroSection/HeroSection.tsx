@@ -8,6 +8,8 @@ import { AuroraTextEffect } from "../lightswind/aurora-text-effect";
 import { DotPattern } from "../lightswind/dot-pattern";
 import { SocialBrandIcon } from "../SocialBrandIcon";
 
+const profileImage = `${import.meta.env.BASE_URL}portfolio/mypic.jpeg`;
+
 export const HeroSection = () => {
   return (
     <section id="hero" className="relative min-h-[100vh] flex flex-col pt-12 md:pt-16 overflow-hidden bg-background">
@@ -136,7 +138,7 @@ export const HeroSection = () => {
                 {/* Profile Photo with Dual Glowing Ring */}
                 <div className="mt-1 relative w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-cyan-400 via-primary to-purple-400 backdrop-blur-md shadow-2xl border border-white/50 overflow-hidden group">
                   <img 
-                    src="/portfolio/mypic.jpeg" 
+                    src={profileImage} 
                     alt="Karthik Kathari" 
                     className="w-full h-full object-cover rounded-full filter contrast-105"
                     loading="eager"
