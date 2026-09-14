@@ -69,7 +69,7 @@ export const ProjectsSection = () => {
       link: "https://karthik-kathari.github.io/Amazon_Clone_Project/",
       image: publicAsset("amazon_clone_project.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-7 h-[360px]",
+      gridClass: "md:col-span-5 h-[360px]",
     },
     {
       id: 8,
@@ -87,7 +87,7 @@ export const ProjectsSection = () => {
       link: "https://your-apps-project.netlify.app",
       image: publicAsset("Yourappimg.png"),
       technologies: ["React", "Bootstrap", "JavaScript"],
-      gridClass: "md:col-span-5 h-[360px]",
+      gridClass: "md:col-span-7 h-[360px]",
     },
     {
       id: 10,
@@ -105,7 +105,7 @@ export const ProjectsSection = () => {
       link: "https://karthik-kathari.github.io/Classic_Calculator/",
       image: publicAsset("calculator.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-4 h-[320px]",
+      gridClass: "md:col-span-5 h-[360px]",
     },
     {
       id: 12,
@@ -114,7 +114,7 @@ export const ProjectsSection = () => {
       link: "https://karthik-kathari.github.io/Parallax_Website/",
       image: publicAsset("Parallax_Website.png"),
       technologies: ["HTML5", "CSS3", "JavaScript"],
-      gridClass: "md:col-span-8 h-[320px]",
+      gridClass: "md:col-span-7 h-[360px]",
     },
     {
       id: 13,
@@ -145,7 +145,7 @@ export const ProjectsSection = () => {
     },
   ];
 
-  const featuredProjectIds = [1, 15, 13, 5, 2];
+  const featuredProjectIds = [1, 2, 15, 13, 5];
   const featuredProjects = featuredProjectIds
     .map((id) => projects.find((project) => project.id === id))
     .filter((project): project is (typeof projects)[number] => Boolean(project));

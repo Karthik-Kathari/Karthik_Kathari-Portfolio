@@ -6,6 +6,7 @@ import { Badge } from "../lightswind/badge";
 import { HangingIdCard } from "../lightswind/HangingIdCard";
 import { AuroraTextEffect } from "../lightswind/aurora-text-effect";
 import { DotPattern } from "../lightswind/dot-pattern";
+import { PlexusBackground } from "../lightswind/PlexusBackground";
 import { SocialBrandIcon } from "../SocialBrandIcon";
 
 const profileImage = `${import.meta.env.BASE_URL}portfolio/mypic.jpeg`;
@@ -15,6 +16,9 @@ export const HeroSection = () => {
     <section id="hero" className="relative min-h-[100vh] flex flex-col pt-12 md:pt-16 overflow-hidden bg-background">
       {/* Background Dot Pattern with Radial Vignette Shade */}
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
+
+      {/* Interactive Plexus Particle Network */}
+      <PlexusBackground opacity={0.4} />
       
       {/* Main Content Area */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 pb-12">
