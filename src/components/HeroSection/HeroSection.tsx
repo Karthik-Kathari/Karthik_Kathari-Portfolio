@@ -18,7 +18,7 @@ export const HeroSection = () => {
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
 
       {/* Interactive Plexus Particle Network */}
-      <PlexusBackground opacity={0.4} />
+      <PlexusBackground opacity={0.15} />
       
       {/* Main Content Area */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 pb-12">
