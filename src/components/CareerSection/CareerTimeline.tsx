@@ -4,7 +4,7 @@ import { Briefcase, Code2, Headset } from "lucide-react";
 export const CareerTimeline = () => {
   const careerEvents = [
     {
-      year: "Jan 2026 – Present",
+      year: "March 2025 – Present",
       title: "Full Stack Developer",
       subtitle: "Gray Material",
       description:
