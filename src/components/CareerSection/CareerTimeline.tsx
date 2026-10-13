@@ -12,7 +12,7 @@ export const CareerTimeline = () => {
       icon: <Code2 className="h-4 w-4 mr-2 text-primary" />,
     },
     {
-      year: "Feb 2024 – Nov 2025",
+      year: "Feb 2024 – Feb 2025",
       title: "IT Technical Support Engineer",
       subtitle: "Bhushan Enterprises",
       description:
