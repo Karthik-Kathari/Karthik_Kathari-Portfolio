@@ -101,7 +101,7 @@ export const HeroSection = () => {
             <Button size="lg" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="rounded-full px-7 h-12 bg-primary text-primary-foreground font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] hover:-translate-y-1">
               View Work <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open("https://drive.google.com/file/d/1nhzNnvSf7cHgCwmU2S-cNJIFBcijw4MX/view?usp=sharing", "_blank", "noopener,noreferrer")} className="rounded-full px-7 h-12 glass-panel text-foreground font-semibold flex items-center gap-2 hover:bg-foreground/10 transition-all hover:-translate-y-1 border-foreground/10">
+            <Button size="lg" variant="outline" onClick={() => window.open("https://drive.google.com/file/d/1l5xI9YmTGMQB909pgiEFetXHvDY7CEYk/view?usp=sharing", "_blank", "noopener,noreferrer")} className="rounded-full px-7 h-12 glass-panel text-foreground font-semibold flex items-center gap-2 hover:bg-foreground/10 transition-all hover:-translate-y-1 border-foreground/10">
               Resume <Download className="w-4 h-4" />
             </Button>
           </motion.div>
@@ -231,4 +231,3 @@ export const HeroSection = () => {
     </section>
   );
 };
-
