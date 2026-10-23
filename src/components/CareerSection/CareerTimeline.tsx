@@ -4,19 +4,27 @@ import { Briefcase, Code2 } from "lucide-react";
 export const CareerTimeline = () => {
   const careerEvents = [
     {
-      year: "On-Site | Aug 2024–Present",
+      year: "On-site | Nov 2025 – Present",
       title: "Full Stack Developer",
-      subtitle: "Bhushan Enterprises",
+      subtitle: "Gray Material",
       description:
-        "Develop and maintain responsive web applications using React, Node.js, and Express.js. Integrate REST APIs, manage PostgreSQL and MongoDB databases, and support deployment, debugging, and performance optimization.",
+        "Contribute to the development of web applications by building, improving, and maintaining reliable full-stack solutions for business needs.",
       icon: <Code2 className="h-4 w-4 mr-2 text-primary" />,
     },
     {
-      year: "Remote | Jan 2024–Jun 2024",
-      title: "Frontend Developer Intern",
+      year: "On-site | Jul 2024 – Oct 2025",
+      title: "Full Stack Developer",
+      subtitle: "Bhushan Enterprises",
+      description:
+        "Developed and enhanced web application features based on business requirements, implementing frontend components using React.js, JavaScript, HTML, CSS, and Bootstrap while supporting overall application functionality and user experience.",
+      icon: <Code2 className="h-4 w-4 mr-2 text-primary" />,
+    },
+    {
+      year: "Remote | Jan 2024 – Jun 2024",
+      title: "Junior Frontend Developer Intern",
       subtitle: "Purezza Technologies",
       description:
-        "Build responsive interfaces using React, HTML, CSS, JavaScript, and Tailwind CSS. Create reusable UI components and interactive layouts, and integrate REST APIs to improve functionality and user experience.",
+        "Engaged in building user-friendly websites at Purezza Technologies, enhancing both aesthetics and functionality through responsive frontend development and UI improvements.",
       icon: <Briefcase className="h-4 w-4 mr-2 text-primary" />,
     },
   ];
